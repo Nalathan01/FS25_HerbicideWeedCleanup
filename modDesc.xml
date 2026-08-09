@@ -12,17 +12,23 @@
 
 A game setting ("Immediate" / "Delayed") lets you choose between clearing within a couple of seconds, or only once a month, which further reduces the (already small, only-the-sprayed-area) load this causes - useful on busy dedicated servers.
 
-Works exactly like the base game's herbicide effect otherwise (spot spraying, Precision Farming, environmental score, etc. are unaffected) - only the leftover withered weed graphics are cleared. Fully compatible with dedicated servers and multiplayer.]]></en>
+Works exactly like the base game's herbicide effect otherwise (spot spraying, Precision Farming, environmental score, etc. are unaffected) - only the leftover withered weed graphics are cleared. Fully compatible with dedicated servers and multiplayer.
+
+GitHub: https://github.com/Nalathan01/FS25_HerbicideWeedCleanup/issues]]></en>
         <de><![CDATA[Nach dem Ausbringen von Herbizid bleibt abgestorbenes Unkraut normalerweise als verwelkte Pflanze auf dem Feld stehen, bis der Boden erneut bearbeitet wird. Diese Mod entfernt dieses verwelkte Unkraut optisch im Hintergrund, sodass gespritzte Flächen wieder sauber aussehen.
 
 Eine Spieleinstellung ("Sofort" / "Verzögert") erlaubt die Wahl zwischen Aufräumen innerhalb weniger Sekunden oder erst einmal im Monat, was die ohnehin geringe Last (nur die gespritzte Fläche) nochmal reduziert - nützlich auf stark ausgelasteten Dedicated Servern.
 
-Ansonsten funktioniert die Herbizid-Wirkung genau wie im Basisspiel (Spot Spraying, Precision Farming, Umweltscore usw. bleiben unverändert) - es wird nur die übrig gebliebene verwelkte Unkraut-Grafik entfernt. Voll kompatibel mit Dedicated Servern und Multiplayer.]]></de>
+Ansonsten funktioniert die Herbizid-Wirkung genau wie im Basisspiel (Spot Spraying, Precision Farming, Umweltscore usw. bleiben unverändert) - es wird nur die übrig gebliebene verwelkte Unkraut-Grafik entfernt. Voll kompatibel mit Dedicated Servern und Multiplayer.
+
+GitHub: https://github.com/Nalathan01/FS25_HerbicideWeedCleanup/issues]]></de>
         <fr><![CDATA[Après la pulvérisation d'herbicide, les mauvaises herbes mortes restent normalement visibles sous forme de plantes flétries sur le champ jusqu'à ce que le sol soit retravaillé. Ce mod supprime ce feuillage de mauvaises herbes flétries en arrière-plan, afin que les zones traitées redeviennent propres.
 
 Un paramètre de jeu (« Immédiat » / « Différé ») permet de choisir entre un nettoyage en quelques secondes ou une seule fois par mois, ce qui réduit encore la charge déjà faible (seule la zone pulvérisée) - utile sur des serveurs dédiés très sollicités.
 
-L'effet de l'herbicide fonctionne sinon exactement comme dans le jeu de base (pulvérisation localisée, Precision Farming, score environnemental, etc. ne sont pas affectés) - seul le graphisme des mauvaises herbes flétries restantes est supprimé. Entièrement compatible avec les serveurs dédiés et le multijoueur.]]></fr>
+L'effet de l'herbicide fonctionne sinon exactement comme dans le jeu de base (pulvérisation localisée, Precision Farming, score environnemental, etc. ne sont pas affectés) - seul le graphisme des mauvaises herbes flétries restantes est supprimé. Entièrement compatible avec les serveurs dédiés et le multijoueur.
+
+GitHub: https://github.com/Nalathan01/FS25_HerbicideWeedCleanup/issues]]></fr>
     </description>
     <iconFilename>icon_HerbicideWeedCleanup.dds</iconFilename>
     <multiplayer supported="true"/>
