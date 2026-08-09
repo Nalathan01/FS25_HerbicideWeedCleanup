@@ -31,16 +31,16 @@ Please include:
 
 Always up to date on Forbidden Mods:
 
-FORBIDDEN_MODS_LINK_HERE
+https://forbidden-mods.de/filebase/file/79509-herbicide-weed-cleanup/
 
-Official download on ModHub:
+Not yet listed individually on ModHub, browse all Nalathan mods:
 
-MODHUB_LINK_HERE
+https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=Nalathan
 
 ## Links
 
 - Website: https://www.nalathan.de/
 - YouTube: https://www.youtube.com/@nalathangaming
-- Forbidden Mods: FORBIDDEN_MODS_LINK_HERE
-- ModHub: MODHUB_LINK_HERE
+- Forbidden Mods: https://forbidden-mods.de/filebase/file/79509-herbicide-weed-cleanup/
+- ModHub: https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=Nalathan
 - Issues: https://github.com/Nalathan01/FS25_HerbicideWeedCleanup/issues
