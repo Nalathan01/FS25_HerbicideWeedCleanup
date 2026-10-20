@@ -16,7 +16,7 @@ Weeds not clearing the way you'd expect? Open a GitHub issue with your mod/game 
 ## Links
 
 - Forbidden Mods: https://forbidden-mods.de/filebase/file/79509-herbicide-weed-cleanup/
-- ModHub: not listed individually yet, browse all Nalathan mods: https://www.farming-simulator.com/mods.php?title=fs2025&searchMod=Nalathan
+- ModHub: https://www.farming-simulator.com/mod.php?mod_id=371610
 - Website: https://www.nalathan.de/
 - YouTube: https://www.youtube.com/@nalathangaming
 - Issues: https://github.com/Nalathan01/FS25_HerbicideWeedCleanup/issues
