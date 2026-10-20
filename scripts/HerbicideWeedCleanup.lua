@@ -4,6 +4,7 @@ HerbicideWeedCleanup.modName = g_currentModName
 HerbicideWeedCleanup.SWEEP_INTERVAL = 2000
 HerbicideWeedCleanup.ACTIVE_GRACE_PERIOD = 15000
 HerbicideWeedCleanup.AREA_MARGIN = 2
+HerbicideWeedCleanup.FILE_NAME = "herbicideWeedCleanup.xml"
 
 source(HerbicideWeedCleanup.modDirectory .. "scripts/HerbicideWeedCleanupSettings.lua")
 
@@ -16,7 +17,6 @@ function HerbicideWeedCleanup:loadMap()
     self.sweepTimer = 0
     self.clock = 0
     self.activeArea = nil
-    self.lastPeriod = nil
 
     self.settings:install()
     self.settings:loadSettings()
@@ -66,6 +66,11 @@ function HerbicideWeedCleanup:getWeedModifier()
     return self.weedModifier
 end
 
+function HerbicideWeedCleanup:getCurrentPeriod()
+    local environment = g_currentMission ~= nil and g_currentMission.environment or nil
+    return environment ~= nil and environment.currentPeriod or nil
+end
+
 function HerbicideWeedCleanup:registerHerbicideActivity(ax, az, bx, bz, cx, cz)
     local dx, dz = bx + cx - ax, bz + cz - az
     local margin = HerbicideWeedCleanup.AREA_MARGIN
@@ -75,7 +80,7 @@ function HerbicideWeedCleanup:registerHerbicideActivity(ax, az, bx, bz, cx, cz)
     local maxZ = math.max(az, bz, cz, dz) + margin
 
     if self.activeArea == nil then
-        self.activeArea = { minX = minX, maxX = maxX, minZ = minZ, maxZ = maxZ }
+        self.activeArea = { minX = minX, maxX = maxX, minZ = minZ, maxZ = maxZ, period = self:getCurrentPeriod() }
     else
         local a = self.activeArea
         a.minX = math.min(a.minX, minX)
@@ -108,22 +113,20 @@ function HerbicideWeedCleanup:update(dt)
     end
 
     if self.settings.mode == HerbicideWeedCleanupSettings.MODE_DELAYED then
-        local environment = g_currentMission ~= nil and g_currentMission.environment or nil
-        local currentPeriod = environment ~= nil and environment.currentPeriod or nil
+        local currentPeriod = self:getCurrentPeriod()
         if currentPeriod == nil then
             return
         end
 
-        if self.lastPeriod == nil then
-            self.lastPeriod = currentPeriod
+        if self.activeArea.period == nil then
+            self.activeArea.period = currentPeriod
             return
         end
 
-        if currentPeriod == self.lastPeriod then
+        if currentPeriod == self.activeArea.period then
             return
         end
 
-        self.lastPeriod = currentPeriod
         self:sweepActiveArea()
         self.activeArea = nil
         return
@@ -142,6 +145,85 @@ function HerbicideWeedCleanup:update(dt)
     end
 end
 
+function HerbicideWeedCleanup:getSavegameFilePath()
+    if g_currentMission == nil or g_currentMission.missionInfo == nil then
+        return nil
+    end
+
+    local savegameDir = g_currentMission.missionInfo.savegameDirectory
+    if savegameDir == nil then
+        return nil
+    end
+
+    return savegameDir .. "/" .. HerbicideWeedCleanup.FILE_NAME
+end
+
+function HerbicideWeedCleanup:loadFromSavegame()
+    if g_currentMission == nil or not g_currentMission:getIsServer() then
+        return
+    end
+
+    local path = self:getSavegameFilePath()
+    if path == nil or not fileExists(path) then
+        return
+    end
+
+    local xmlFile = XMLFile.load("herbicideWeedCleanupXML", path)
+    if xmlFile == nil then
+        return
+    end
+
+    local key = "herbicideWeedCleanup.pendingArea"
+    local minX = xmlFile:getFloat(key .. "#minX")
+    local maxX = xmlFile:getFloat(key .. "#maxX")
+    local minZ = xmlFile:getFloat(key .. "#minZ")
+    local maxZ = xmlFile:getFloat(key .. "#maxZ")
+    if minX ~= nil and maxX ~= nil and minZ ~= nil and maxZ ~= nil then
+        self.activeArea = {
+            minX = minX,
+            maxX = maxX,
+            minZ = minZ,
+            maxZ = maxZ,
+            period = xmlFile:getInt(key .. "#period"),
+            lastSprayAt = self.clock or 0
+        }
+    end
+
+    xmlFile:delete()
+end
+
+function HerbicideWeedCleanup:saveToSavegame()
+    if g_currentMission == nil or not g_currentMission:getIsServer() then
+        return
+    end
+
+    local path = self:getSavegameFilePath()
+    if path == nil then
+        return
+    end
+
+    local xmlFile = XMLFile.create("herbicideWeedCleanupXML", path, "herbicideWeedCleanup")
+    if xmlFile == nil then
+        Logging.error("%s: could not create %s", HerbicideWeedCleanup.modName, path)
+        return
+    end
+
+    local a = self.activeArea
+    if a ~= nil then
+        local key = "herbicideWeedCleanup.pendingArea"
+        xmlFile:setFloat(key .. "#minX", a.minX)
+        xmlFile:setFloat(key .. "#maxX", a.maxX)
+        xmlFile:setFloat(key .. "#minZ", a.minZ)
+        xmlFile:setFloat(key .. "#maxZ", a.maxZ)
+        if a.period ~= nil then
+            xmlFile:setInt(key .. "#period", a.period)
+        end
+    end
+
+    xmlFile:save()
+    xmlFile:delete()
+end
+
 function HerbicideWeedCleanup.updateSprayArea(startWorldX, superFunc, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, sprayType, sprayAmount)
     local area, totalArea = superFunc(startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, sprayType, sprayAmount)
 
@@ -156,3 +238,11 @@ end
 FSDensityMapUtil.updateSprayArea = Utils.overwrittenFunction(FSDensityMapUtil.updateSprayArea, HerbicideWeedCleanup.updateSprayArea)
 
 addModEventListener(HerbicideWeedCleanup)
+
+FSBaseMission.loadMapFinished = Utils.appendedFunction(FSBaseMission.loadMapFinished, function()
+    HerbicideWeedCleanup:loadFromSavegame()
+end)
+
+FSCareerMissionInfo.saveToXMLFile = Utils.appendedFunction(FSCareerMissionInfo.saveToXMLFile, function()
+    HerbicideWeedCleanup:saveToSavegame()
+end)
